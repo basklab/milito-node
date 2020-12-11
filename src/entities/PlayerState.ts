@@ -1,25 +1,20 @@
 import StateEnum from "@entities/StateEnum";
 
-class PlayerState {
-    table: Object
+export default class PlayerState {
+    deck: Array<number>
+    discard: Array<number>
     hand: Array<number>
+    row_1: [number?, number?, number?, number?, number?]
+    row_2: [number?, number?, number?, number?, number?]
     state: StateEnum
-    cardsToDiscard: number
-    discarded_cards: Array<number>
-    selected_card?: number
-    selected_column?: number
 
-
-    constructor(player_state: PlayerState) {
-        this.table = player_state.table
-        this.hand = player_state.hand
-        this.state = player_state.state
-        this.cardsToDiscard = player_state.cardsToDiscard
-        this.discarded_cards = player_state.discarded_cards
-        this.selected_card = player_state.selected_card
-        this.selected_column = player_state.selected_column
+    constructor(gameState: PlayerState) {
+        this.deck = gameState.deck
+        this.discard = gameState.discard
+        this.hand = gameState.hand
+        this.row_1 = gameState.row_1
+        this.row_2 = gameState.row_2
+        this.state = gameState.state
     }
 
 }
-
-export default PlayerState

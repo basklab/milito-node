@@ -1,36 +1,45 @@
-import {Router} from 'express';
+import {Router} from 'express'
 import cors from 'cors'
 import {json} from 'body-parser'
 
+import GameState from "@entities/GameState"
+import StateEnum from "@entities/StateEnum"
+import {PlayACardEvent} from "../events/GameEvents"
 import PlayerState from "@entities/PlayerState";
-import PlayerTable from "@entities/PlayerTable";
-import StateEnum from "@entities/StateEnum";
 
-const router = Router();
+const router = Router()
 
 router.use(cors())
 
-const jsonParser = json();
+const jsonParser = json()
 
-const player_table = new PlayerTable({
-        enemy_row_2: [1, 0, 0, 1, 0],
-        enemy_row_1: [1, 0, 0, 1, 0],
-        territory_row: [0, 0, 0, 0, 0],
-        player_row_1: [3, 1, 2, 1, 2],
-        player_row_2: [1, -1, 3, 1, 3],
+const player_table1 = new PlayerState({
+        discard: [],
+        hand: [],
+        row_1: [1, 0, 0, 1, 0],
+        row_2: [1, 0, 0, 1, 0],
+        state: StateEnum.SELECT_CARDS_STATE,
+        deck: []
     }
 )
 
-const res = new PlayerState({
-        table: player_table,
-        hand: [3, 2, 2],
+const player_table2 = new PlayerState({
+    discard: [],
+    hand: [],
+        row_1: [3, 1, 2, 1, 2],
+        row_2: [1, -1, 3, 1, 3],
         state: StateEnum.SELECT_CARDS_STATE,
-        cardsToDiscard: 0,
-        discarded_cards: [],
-        selected_card: undefined,
-        selected_column: undefined,
+        deck: [],
     }
-);
+)
+
+const res = new GameState({
+        neutral: [0, 0, 0, 0, 0],
+        phase: StateEnum.SELECT_CARDS_STATE,
+        current_player: player_table1,
+        another_player: player_table2,
+    }
+)
 
 
 /******************************************************************************
@@ -43,6 +52,18 @@ router.post('/ololo', jsonParser, (request, response) => {
     response.json(res)
 })
 
+
+router.post('/event', jsonParser, (request, response) => {
+    console.log("request path:", request.path)
+    console.log("request body:", request.body)
+    if (request.body.kind == "PlayACardEvent") {
+        let myEvent = new PlayACardEvent(request.body)
+        console.log("event:", myEvent)
+    } else {
+        throw Error("unknown event type")
+    }
+    response.json(res)
+})
 
 /******************************************************************************
  *                                     Export
