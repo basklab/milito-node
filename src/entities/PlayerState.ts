@@ -1,9 +1,11 @@
 import StateEnum from "@entities/StateEnum";
+import Deck from "@entities/Deck";
+import Hand from "@entities/Hand";
 
 export default class PlayerState {
-    deck: Array<number>
-    discard: Array<number>
-    hand: Array<number>
+    deck: Deck
+    discard: Deck
+    hand: Hand
     row_1: [number?, number?, number?, number?, number?]
     row_2: [number?, number?, number?, number?, number?]
     state: StateEnum

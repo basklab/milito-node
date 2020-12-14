@@ -6,7 +6,8 @@
     "lint": "eslint . --ext .ts",
     "start": "node -r module-alias/register ./dist --env=production",
     "start:dev": "nodemon",
-    "test": "nodemon --config ./spec/nodemon.json"
+    "test": "nodemon --config ./spec/nodemon.json",
+    "ololo": "ts-node -r tsconfig-paths/register ./src/repl.ts"
   },
   "nodemonConfig": {
     "watch": [
@@ -16,7 +17,7 @@
     "ignore": [
       "src/public"
     ],
-    "exec": "ts-node -r tsconfig-paths/register ./src"
+    "exec": "l"
   },
   "_moduleAliases": {
     "@daos": "dist/daos",

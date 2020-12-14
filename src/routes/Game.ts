@@ -13,34 +13,35 @@ router.use(cors())
 
 const jsonParser = json()
 
-const player_table1 = new PlayerState({
-        discard: [],
-        hand: [],
-        row_1: [1, 0, 0, 1, 0],
-        row_2: [1, 0, 0, 1, 0],
-        state: StateEnum.SELECT_CARDS_STATE,
-        deck: []
-    }
-)
+// const player_table1 = new PlayerState({
+//         discard: [],
+//         hand: [],
+//         row_1: [1, 0, 0, 1, 0],
+//         row_2: [1, 0, 0, 1, 0],
+//         state: StateEnum.SELECT_CARDS_STATE,
+//         deck: []
+//     }
+// )
+//
+// const player_table2 = new PlayerState({
+//     discard: [],
+//     hand: [],
+//         row_1: [3, 1, 2, 1, 2],
+//         row_2: [1, -1, 3, 1, 3],
+//         state: StateEnum.SELECT_CARDS_STATE,
+//         deck: [],
+//     }
+// )
+//
+// const res = new GameState({
+//         neutral: [0, 0, 0, 0, 0],
+//         phase: StateEnum.SELECT_CARDS_STATE,
+//         current_player: player_table1,
+//         another_player: player_table2,
+//     }
+// )
 
-const player_table2 = new PlayerState({
-    discard: [],
-    hand: [],
-        row_1: [3, 1, 2, 1, 2],
-        row_2: [1, -1, 3, 1, 3],
-        state: StateEnum.SELECT_CARDS_STATE,
-        deck: [],
-    }
-)
-
-const res = new GameState({
-        neutral: [0, 0, 0, 0, 0],
-        phase: StateEnum.SELECT_CARDS_STATE,
-        current_player: player_table1,
-        another_player: player_table2,
-    }
-)
-
+const res = {}
 
 /******************************************************************************
  *                      Get All Game States - "POST /api/game/ololo"
