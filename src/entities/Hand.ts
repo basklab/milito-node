@@ -27,7 +27,8 @@ export default class Hand extends IHand {
         return "(LP " + (this.cards.map(x => x.toString()).join(" ")) + " RP)"
     }
 
-    [util.inspect.custom](depth: number, opts: Object) {
-        return "(LP " + (this.cards.map(x => util.inspect(x)).join(" ")) + " RP)"
-    }
+    // [util.inspect.custom](depth: number, opts: Object) {
+    //     return "(LP " + (this.cards.map(x => util.inspect(x)).join(" ")) + " RP)"
+    // }
+
 }

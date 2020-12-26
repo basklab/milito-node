@@ -2,8 +2,9 @@ import PlayerState from "@entities/PlayerState";
 import Deck from "@entities/Deck";
 import Hand from "@entities/Hand";
 import StateEnum from "@entities/StateEnum";
-import CarthaginianDeck from "./decks/CarthaginianDeck";
 import GameState from "@entities/GameState";
+import AncientBritishDeck from "./decks/AncientBritish";
+import AlexandrianMacedonianDeck from "./decks/AlexandrianMacedonian";
 
 const player_table1 = new PlayerState({
         discard: Deck.makeEmpty(),
@@ -11,7 +12,7 @@ const player_table1 = new PlayerState({
         row_1: [0, 0, 0, 0, 0],
         row_2: [0, 0, 0, 0, 0],
         state: StateEnum.GAME_START_STATE,
-        deck: CarthaginianDeck.make()
+        deck: AncientBritishDeck.make()
     }
 )
 const player_table2 = new PlayerState({
@@ -20,7 +21,7 @@ const player_table2 = new PlayerState({
         row_1: [0, 0, 0, 0, 0],
         row_2: [0, 0, 0, 0, 0],
         state: StateEnum.GAME_START_STATE,
-        deck: CarthaginianDeck.make(),
+        deck: AlexandrianMacedonianDeck.make(),
     }
 )
 
@@ -38,7 +39,7 @@ export default function initialSetup(): GameState {
         current_player: player_table1,
         another_player: player_table2,
     })
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 9; i++) {
         gameState.current_player = takeCard(gameState.current_player)
         gameState.another_player = takeCard(gameState.another_player)
     }

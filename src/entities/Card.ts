@@ -1,11 +1,29 @@
-export interface LeaderCard {
+import util from "util";
+
+export class ILeaderCard {
     id?: number
-    combat_value: string
+    combat_value: number
     place_unit_ability: number
-    special_effect: number
+    special_effect?: string
+
+    constructor(props: ILeaderCard) {
+        this.id = props.id
+        this.combat_value = props.combat_value
+        this.place_unit_ability = props.place_unit_ability
+        this.special_effect = props.special_effect
+    }
+
 }
 
-export interface UnitCard {
+export class LeaderCard extends ILeaderCard {
+
+    [util.inspect.custom](depth: number, opts: Object) {
+        return "Leader#" + this.id
+    }
+
+}
+
+export class IUnitCard {
     id?: number
     unit_type: string
     speed: number
@@ -16,6 +34,27 @@ export interface UnitCard {
     combine_ability?: boolean
     attack_modifiers?: undefined
     defence_modifiers?: undefined
+
+    constructor(props: IUnitCard) {
+        this.id = props.id
+        this.unit_type = props.unit_type
+        this.speed = props.speed
+        this.attack_strength = props.attack_strength
+        this.defence_strength = props.defence_strength
+        this.deploy_penalty = props.deploy_penalty
+        this.flank_penalty = props.flank_penalty
+        this.combine_ability = props.combine_ability
+        this.attack_modifiers = props.attack_modifiers
+        this.defence_modifiers = props.defence_modifiers
+    }
+
+}
+
+export class UnitCard extends IUnitCard {
+
+    [util.inspect.custom](depth: number, opts: Object) {
+        return this.unit_type + "#" + this.id
+    }
 
 }
 
