@@ -70,7 +70,7 @@ const am_leaders_specs: ILeaderCard[] = [
     },
 ]
 
-const pikes: IUnitCard = {
+export const pikes: IUnitCard = {
     unit_type: "Pikes",
     speed: 0,
     attack_strength: 5,
@@ -79,7 +79,7 @@ const pikes: IUnitCard = {
     flank_penalty: 1,
 }
 
-const spears: IUnitCard = {
+export const spears: IUnitCard = {
     unit_type: "Spears",
     speed: 0,
     attack_strength: 4,
@@ -88,7 +88,7 @@ const spears: IUnitCard = {
     flank_penalty: 1,
 }
 
-const light_infantry: IUnitCard = {
+export const light_infantry: IUnitCard = {
     unit_type: "Light_Infantry",
     speed: 3,
     attack_strength: 2,
@@ -96,7 +96,7 @@ const light_infantry: IUnitCard = {
     combine_ability: true,
 }
 
-const slingers: IUnitCard = {
+export const slingers: IUnitCard = {
     unit_type: "Slingers",
     speed: 3,
     attack_strength: 1,
@@ -104,14 +104,14 @@ const slingers: IUnitCard = {
     combine_ability: true,
 }
 
-const companions: IUnitCard = {
+export const companions: IUnitCard = {
     unit_type: "Companions",
     speed: 3,
     attack_strength: 4,
     defence_strength: 2,
 }
 
-const heavy_cavalry: IUnitCard = {
+export const heavy_cavalry: IUnitCard = {
     unit_type: "Heavy_Cavalry",
     speed: 3,
     attack_strength: 4,
@@ -120,7 +120,7 @@ const heavy_cavalry: IUnitCard = {
     flank_penalty: 1,
 }
 
-const light_cavalry: IUnitCard = {
+export const light_cavalry: IUnitCard = {
     unit_type: "Light_Cavalry",
     speed: 5,
     attack_strength: 1,

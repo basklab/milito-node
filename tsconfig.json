@@ -72,6 +72,9 @@
       "@entities/*": [
         "src/entities/*"
       ],
+      "@config/*": [
+        "src/config/*"
+      ],
       "@shared/*": [
         "src/shared/*"
       ],

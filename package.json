@@ -6,7 +6,8 @@
     "lint": "eslint . --ext .ts",
     "start": "node -r module-alias/register ./dist --env=production",
     "start:dev": "nodemon",
-    "test": "nodemon --config ./spec/nodemon.json",
+    "test": "mocha",
+    "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
     "ololo": "ts-node -r tsconfig-paths/register ./src/repl.ts"
   },
   "nodemonConfig": {
@@ -22,6 +23,7 @@
   "_moduleAliases": {
     "@daos": "dist/daos",
     "@entities": "dist/entities",
+    "@config": "dist/config",
     "@shared": "dist/shared",
     "@server": "dist/Server"
   },
@@ -85,6 +87,10 @@
     "@types/supertest": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
+    "@types/mocha": "^8.2.0",
+    "@types/chai": "^4.2.14",
+    "chai": "latest",
+    "mocha": "latest",
     "cors": "^2.8.5",
     "eslint": "^7.14.0",
     "find": "^0.3.0",
