@@ -4,7 +4,7 @@ import {json} from 'body-parser'
 
 import GameState from "@entities/GameState"
 import StateEnum from "@entities/StateEnum"
-import {PlayACardEvent} from "../events/GameEvents"
+import {PlaceUnitEvent} from "../events/GameEvents"
 import PlayerState from "@entities/PlayerState";
 
 const router = Router()
@@ -57,8 +57,8 @@ router.post('/ololo', jsonParser, (request, response) => {
 router.post('/event', jsonParser, (request, response) => {
     console.log("request path:", request.path)
     console.log("request body:", request.body)
-    if (request.body.kind == "PlayACardEvent") {
-        let myEvent = new PlayACardEvent(request.body)
+    if (request.body.kind == "PlaceUnitEvent") {
+        let myEvent = new PlaceUnitEvent(request.body)
         console.log("event:", myEvent)
     } else {
         throw Error("unknown event type")

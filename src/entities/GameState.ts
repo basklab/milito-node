@@ -1,11 +1,13 @@
 import StateEnum from "@entities/StateEnum";
 import PlayerState from "@entities/PlayerState";
+import AttackState from "@entities/AttackState";
 
 export default class GameState {
     neutral: [number, number, number, number, number]
     phase: StateEnum
     current_player: PlayerState
     another_player: PlayerState
+    attack_state?: AttackState
 
 
     constructor(game_state: GameState) {

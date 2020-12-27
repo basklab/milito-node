@@ -1,13 +1,14 @@
 import StateEnum from "@entities/StateEnum";
 import Deck from "@entities/Deck";
 import Hand from "@entities/Hand";
+import {UnitCard} from "@entities/Card";
 
 export default class PlayerState {
     deck: Deck
     discard: Deck
     hand: Hand
-    row_1: [number?, number?, number?, number?, number?]
-    row_2: [number?, number?, number?, number?, number?]
+    row_1: [UnitCard?, UnitCard?, UnitCard?, UnitCard?, UnitCard?]
+    row_2: [UnitCard?, UnitCard?, UnitCard?, UnitCard?, UnitCard?]
     state: StateEnum
 
     constructor(gameState: PlayerState) {

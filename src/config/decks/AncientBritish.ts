@@ -69,7 +69,7 @@ const ab_leaders_specs: ILeaderCard[] = [
 ]
 
 const warband_medium_infantry: IUnitCard = {
-    unit_type: "Warband_Medium_Infantry",
+    unit_type: "Warband_Med_Inf",
     speed: 2,
     attack_strength: 4,
     defence_strength: 2,

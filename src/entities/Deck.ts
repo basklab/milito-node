@@ -1,4 +1,5 @@
 import {Card, IUnitCard} from "@entities/Card";
+import util from "util";
 
 class IDeck {
     cards: Card[]
@@ -31,7 +32,6 @@ export default class Deck extends IDeck {
         return result
     }
 
-
     protected static semi_random(seed: number) {
         var x = Math.sin(seed++) * 10000;
         return x - Math.floor(x);
@@ -52,8 +52,15 @@ export default class Deck extends IDeck {
             array[i] = t;
             ++seed                                     // <-- ADDED LINE
         }
-
         return array;
+    }
+
+    [util.inspect.custom](depth: number, opts: Object) {
+        return "Deck(" + this.cards.length + ")"
+    }
+
+    push(card: Card) {
+        this.cards.push(card)
     }
 
 }

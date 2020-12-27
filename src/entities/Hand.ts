@@ -23,6 +23,12 @@ export default class Hand extends IHand {
         return this
     }
 
+    public take_card_by_id(id: number): Card {
+        const element = this.cards.filter((card) => card.id === id)[0]
+        this.cards = this.cards.filter((card) => card.id !== id)
+        return element
+    }
+
     toString() {
         return "(LP " + (this.cards.map(x => x.toString()).join(" ")) + " RP)"
     }
