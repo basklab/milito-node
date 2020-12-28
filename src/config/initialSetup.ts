@@ -7,17 +7,22 @@ import AncientBritishDeck from "./decks/AncientBritish";
 import AlexandrianMacedonianDeck from "./decks/AlexandrianMacedonian";
 
 const player_table1 = new PlayerState({
-        discard: Deck.makeEmpty(),
+        dead_pile: Deck.makeEmpty(),
+        discard_pile: Deck.makeEmpty(),
         hand: Hand.makeEmpty(),
+        player_id: 1,
         row_1: [undefined, undefined, undefined, undefined, undefined],
         row_2: [undefined, undefined, undefined, undefined, undefined],
         state: StateEnum.GAME_START_STATE,
         deck: AlexandrianMacedonianDeck.make(),
     }
 )
+
 const player_table2 = new PlayerState({
-        discard: Deck.makeEmpty(),
+        dead_pile: Deck.makeEmpty(),
+        discard_pile: Deck.makeEmpty(),
         hand: Hand.makeEmpty(),
+        player_id: 2,
         row_1: [undefined, undefined, undefined, undefined, undefined],
         row_2: [undefined, undefined, undefined, undefined, undefined],
         state: StateEnum.GAME_START_STATE,
@@ -30,7 +35,6 @@ export function takeCard(playerState: PlayerState): PlayerState {
     playerState.hand.push(card)
     return playerState
 }
-
 
 export default function initialSetup(): GameState {
     const gameState = new GameState({

@@ -6,17 +6,16 @@ export default class SquadFormation {
     support_unit?: UnitCard
     bonus_card?: Card
 
-    constructor(gameState: SquadFormation) {
-        this.main_unit = gameState.main_unit
-        this.support_unit = gameState?.support_unit
-        this.bonus_card = gameState?.bonus_card
+    constructor(that: SquadFormation) {
+        this.main_unit = that.main_unit
+        this.support_unit = that?.support_unit
+        this.bonus_card = that?.bonus_card
     }
 
 }
 
 
 export enum AttackOutcomesEnum {
-    DEFENDER_WITHDRAWS = "DEFENDER_WITHDRAWS",
     DEFENDER_WINS = "DEFENDER_WINS",
     TIED = "TIED",
     ATTACKER_WINS = "ATTACKER_WINS",

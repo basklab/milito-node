@@ -1,10 +1,12 @@
 import StateEnum from "@entities/StateEnum";
 import GameState from "@entities/GameState";
-import {ChooseDefenderEvent, InitiateAttackEvent, PlaceUnitEvent} from "../events/GameEvents";
+import {ChooseDefenderEvent, DefenderWithdrawsEvent, InitiateAttackEvent, PlaceUnitEvent} from "../events/GameEvents";
 import {UnitCard} from "@entities/Card";
 import {takeCard} from "./initialSetup";
 import AttackState from "@entities/AttackState";
 import assert from "assert";
+import SquadFormation, {AttackOutcomesEnum, resolve_battle} from "@config/resolveBattle";
+import PlayerState from "@entities/PlayerState";
 
 
 export function check_victory(state: GameState): GameState {
@@ -75,7 +77,7 @@ export function place_a_unit(state: GameState, action: PlaceUnitEvent): GameStat
         } else {
             deploy_value += 1
         }
-        player.discard.push(cardById)
+        player.discard_pile.push(cardById)
     })
     let card_in_hand = <UnitCard>player.hand.take_card_by_id(action.selected_card)
     assert("unit_type" in card_in_hand)
@@ -93,7 +95,7 @@ export function place_a_unit(state: GameState, action: PlaceUnitEvent): GameStat
     }
     const tmp = current_row[action.selected_column]
     if (tmp !== undefined) {
-        player.discard.push(tmp)
+        player.discard_pile.push(tmp)
     }
     current_row[action.selected_column] = card_in_hand
     return state
@@ -118,10 +120,12 @@ export function initiate_attack(state: GameState, action: InitiateAttackEvent): 
     } else {
         bonus_card = state.current_player.hand.take_card_by_id(action.bonus_card_id)
     }
-    state.attack_state = new AttackState({
-        bonus_card: bonus_card,
-        main_unit: main_card,
-        support_unit: support_card,
+    state.battle_state = new AttackState({
+        squad_formation: new SquadFormation({
+            bonus_card: bonus_card,
+            main_unit: main_card,
+            support_unit: support_card,
+        }),
         attack_column: action.selected_column,
         defence_column: action.selected_column,
     })
@@ -130,30 +134,117 @@ export function initiate_attack(state: GameState, action: InitiateAttackEvent): 
 }
 
 
-export function choose_defender(state: GameState, action: ChooseDefenderEvent): GameState {
+function remove_losing_units(player: PlayerState, squad: SquadFormation, column: number) {
+    player.row_1[column] = undefined
+    player.row_2[column] = undefined
+    player.dead_pile.push(squad.main_unit)
+    if (squad.support_unit !== undefined) {
+        player.dead_pile.push(squad.support_unit)
+    }
+}
+
+function discard_tied_units(player: PlayerState, squad: SquadFormation, column: number) {
+    player.row_1[column] = undefined
+    player.row_2[column] = undefined
+    player.discard_pile.push(squad.main_unit)
+    if (squad.support_unit !== undefined) {
+        player.discard_pile.push(squad.support_unit)
+    }
+}
+
+export function choose_defender(game: GameState, action: ChooseDefenderEvent): GameState {
     console.log("ACTION: " + action.kind)
-    assert(state.attack_state !== undefined)
-    const column = state.attack_state.defence_column
+    assert(game.battle_state !== undefined)
+    const column = game.battle_state.defence_column
     let main_card
     let support_card
+    const attacking_player = game.current_player
+    const defending_player = game.another_player
     if (action.selected_row === 1) {
-        main_card = state.current_player.row_1[column]
-        support_card = state.current_player.row_2[column]
+        main_card = defending_player.row_1[column]
+        support_card = defending_player.row_2[column]
     } else {
-        main_card = state.current_player.row_2[column]
-        support_card = state.current_player.row_1[column]
+        main_card = defending_player.row_2[column]
+        support_card = defending_player.row_1[column]
     }
+    assert(main_card !== undefined)
     let bonus_card
     if (!action.is_bonus_card_used) {
         bonus_card = undefined
     } else if (action.bonus_card_id === undefined) {
-        bonus_card = state.current_player.deck.pop()
+        bonus_card = defending_player.deck.pop()
     } else {
-        bonus_card = state.current_player.hand.take_card_by_id(action.bonus_card_id)
+        bonus_card = defending_player.hand.take_card_by_id(action.bonus_card_id)
     }
-
-    return state
+    const defenceSquad = new SquadFormation({
+        bonus_card: bonus_card,
+        main_unit: main_card,
+        support_unit: support_card
+    })
+    const attackSquad = game.battle_state.squad_formation;
+    const outcome = resolve_battle(
+        attackSquad,
+        defenceSquad,
+    )
+    console.log("outcome =", outcome)
+    game.phase = StateEnum.PHASE_4_PLAYER_ACTIONS
+    if (defenceSquad.bonus_card !== undefined) {
+        defending_player.discard_pile.push(defenceSquad.bonus_card)
+    }
+    if (attackSquad.bonus_card !== undefined) {
+        attacking_player.discard_pile.push(attackSquad.bonus_card)
+    }
+    switch (outcome) {
+        case AttackOutcomesEnum.ATTACKER_WINS:
+            remove_losing_units(defending_player, defenceSquad, game.battle_state.defence_column)
+            game.neutral[game.battle_state.defence_column] = game.current_player.player_id
+            return game
+        case AttackOutcomesEnum.DEFENDER_WINS:
+            remove_losing_units(game.current_player, attackSquad, game.battle_state.defence_column)
+            if (game.neutral[game.battle_state.defence_column] !== game.another_player.player_id) {
+                game.neutral[game.battle_state.defence_column] = 0
+            }
+            return game
+        case AttackOutcomesEnum.TIED:
+            discard_tied_units(game.current_player, attackSquad, game.battle_state.defence_column)
+            discard_tied_units(game.another_player, defenceSquad, game.battle_state.defence_column)
+            game.neutral[game.battle_state.defence_column] = 0
+            return game
+    }
 }
+
+
+export function withdraw_from_battle(game: GameState, action: DefenderWithdrawsEvent): GameState {
+    console.log("ACTION: " + action.kind)
+    assert(game.battle_state !== undefined)
+    const attackColumn = game.battle_state.attack_column
+    const defenceColumn = game.battle_state.defence_column
+    const attackingPlayer = game.current_player
+    const defendingPlayer = game.another_player
+    const attack_speed = Math.max(attackingPlayer.row_1[attackColumn]?.speed ?? 0,
+        attackingPlayer?.row_2[attackColumn]?.speed ?? 0)
+    const defence_speed = Math.min(defendingPlayer.row_1[defenceColumn]?.speed ?? 9,
+        defendingPlayer?.row_2[defenceColumn]?.speed ?? 9)
+    if (defence_speed <= attack_speed) {
+        throw new Error("can't withdraw with speed = " + defence_speed)
+    }
+    if (game.battle_state.squad_formation.bonus_card !== undefined) {
+        attackingPlayer.discard_pile.push(game.battle_state.squad_formation.bonus_card)
+    }
+    const unitCard = defendingPlayer.row_1[defenceColumn];
+    if (unitCard !== undefined) {
+        defendingPlayer.discard_pile.push(unitCard)
+        defendingPlayer.row_1[defenceColumn] = undefined
+    }
+    const supportCard = defendingPlayer.row_2[defenceColumn];
+    if (supportCard !== undefined) {
+        defendingPlayer.discard_pile.push(supportCard)
+        defendingPlayer.row_2[defenceColumn] = undefined
+    }
+    game.phase = StateEnum.PHASE_4_PLAYER_ACTIONS
+    return game
+}
+
 
 export function draw_cards(state: GameState): GameState {
     assert(state.phase === StateEnum.PHASE_4_PLAYER_ACTIONS)
@@ -171,5 +262,3 @@ export function end_this_turn(state: GameState): GameState {
     state.phase = StateEnum.PHASE_1_VICTORY_CHECK
     return state
 }
-
-

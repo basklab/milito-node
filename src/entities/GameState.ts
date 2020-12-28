@@ -7,7 +7,7 @@ export default class GameState {
     phase: StateEnum
     current_player: PlayerState
     another_player: PlayerState
-    attack_state?: AttackState
+    battle_state?: AttackState
 
 
     constructor(game_state: GameState) {

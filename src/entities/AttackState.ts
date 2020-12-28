@@ -1,18 +1,14 @@
-import {Card, UnitCard} from "@entities/Card";
+import SquadFormation from "@config/resolveBattle";
 
 export default class AttackState {
-    main_unit: UnitCard
-    support_unit?: UnitCard
-    bonus_card: Card
+    squad_formation: SquadFormation
     attack_column: number
     defence_column: number
 
-    constructor(gameState: AttackState) {
-        this.main_unit = gameState.main_unit
-        this.support_unit = gameState?.support_unit
-        this.bonus_card = gameState.bonus_card
-        this.attack_column = gameState.attack_column
-        this.defence_column = gameState.defence_column
+    constructor(that: AttackState) {
+        this.squad_formation = that.squad_formation
+        this.attack_column = that.attack_column
+        this.defence_column = that.defence_column
     }
 
 }

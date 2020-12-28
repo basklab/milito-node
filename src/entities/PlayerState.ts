@@ -5,19 +5,23 @@ import {UnitCard} from "@entities/Card";
 
 export default class PlayerState {
     deck: Deck
-    discard: Deck
+    dead_pile: Deck
+    discard_pile: Deck
     hand: Hand
+    player_id: number
     row_1: [UnitCard?, UnitCard?, UnitCard?, UnitCard?, UnitCard?]
     row_2: [UnitCard?, UnitCard?, UnitCard?, UnitCard?, UnitCard?]
     state: StateEnum
 
-    constructor(gameState: PlayerState) {
-        this.deck = gameState.deck
-        this.discard = gameState.discard
-        this.hand = gameState.hand
-        this.row_1 = gameState.row_1
-        this.row_2 = gameState.row_2
-        this.state = gameState.state
+    constructor(that: PlayerState) {
+        this.deck = that.deck
+        this.dead_pile = that.dead_pile
+        this.discard_pile = that.discard_pile
+        this.hand = that.hand
+        this.player_id = that.player_id
+        this.row_1 = that.row_1
+        this.row_2 = that.row_2
+        this.state = that.state
     }
 
 }

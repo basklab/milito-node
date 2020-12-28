@@ -25,6 +25,9 @@ export default class Hand extends IHand {
 
     public take_card_by_id(id: number): Card {
         const element = this.cards.filter((card) => card.id === id)[0]
+        if (element === undefined) {
+            throw new Error("card not found" + id)
+        }
         this.cards = this.cards.filter((card) => card.id !== id)
         return element
     }
