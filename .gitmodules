@@ -1,0 +1,3 @@
+[submodule "src/milito-shared"]
+	path = src/milito-shared
+	url = git@github.com:obask/milito-shared.git
