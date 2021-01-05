@@ -1,4 +1,5 @@
 import util from "util";
+import CardDTO from "../milito-shared/game/CardDTO";
 
 export class ILeaderCard {
     id?: number
@@ -19,6 +20,13 @@ export class LeaderCard extends ILeaderCard {
 
     [util.inspect.custom](depth: number, opts: Object) {
         return "Leader#" + this.id
+    }
+
+    toDTO(): CardDTO {
+        return new CardDTO({
+            id: this.id,
+            unitType: `leader_${this.id}`
+        })
     }
 
 }
@@ -54,6 +62,13 @@ export class UnitCard extends IUnitCard {
 
     [util.inspect.custom](depth: number, opts: Object) {
         return this.unit_type + "#" + this.id
+    }
+
+    toDTO(): CardDTO {
+        return new CardDTO({
+            id: this.id,
+            unitType: this.unit_type
+        })
     }
 
 }

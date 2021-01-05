@@ -1,16 +1,19 @@
-import StateEnum from "@entities/StateEnum";
+import PhasesEnum from "../milito-shared/enums/PhasesEnum";
 import GameState from "@entities/GameState";
-import {ChooseDefenderEvent, DefenderWithdrawsEvent, InitiateAttackEvent, PlaceUnitEvent} from "../events/GameEvents";
 import {UnitCard} from "@entities/Card";
 import {takeCard} from "./initialSetup";
 import AttackState from "@entities/AttackState";
 import assert from "assert";
 import SquadFormation, {AttackOutcomesEnum, resolve_battle} from "@config/resolveBattle";
 import PlayerState from "@entities/PlayerState";
+import PlaceUnitEvent from "../milito-shared/events/PlaceUnitEvent";
+import InitiateAttackEvent from "../milito-shared/events/InitiateAttackEvent";
+import ChooseDefenderEvent from "../milito-shared/events/ChooseDefenderEvent";
+import DefenderWithdrawsEvent from "../milito-shared/events/DefenderWithdrawsEvent";
 
 
 export function check_victory(state: GameState): GameState {
-    assert(state.phase === StateEnum.PHASE_1_VICTORY_CHECK)
+    assert(state.phase === PhasesEnum.PHASE_1_VICTORY_CHECK)
     let count1 = 0
     let count2 = 0
     for (let x of state.neutral) {
@@ -22,43 +25,43 @@ export function check_victory(state: GameState): GameState {
     }
     if (count1 >= 3) {
         console.log("PLAYER1 WON")
-        state.phase = StateEnum.GAME_OVER
+        state.phase = PhasesEnum.GAME_OVER
     } else if (count2 >= 3) {
         console.log("PLAYER2 WON")
-        state.phase = StateEnum.GAME_OVER
+        state.phase = PhasesEnum.GAME_OVER
     } else {
-        state.phase = StateEnum.PHASE_2_ADVANCE
+        state.phase = PhasesEnum.PHASE_2_ADVANCE
     }
     return state
 }
 
 
 export function advance_units(state: GameState): GameState {
-    assert(state.phase === StateEnum.PHASE_2_ADVANCE)
+    assert(state.phase === PhasesEnum.PHASE_2_ADVANCE)
     // TODO update unopposed territories
-    state.phase = StateEnum.PHASE_3_FLANK_ATTACKS
+    state.phase = PhasesEnum.PHASE_3_FLANK_ATTACKS
     return state
 }
 
 export function flank_attacks(state: GameState): GameState {
-    assert(state.phase === StateEnum.PHASE_3_FLANK_ATTACKS)
+    assert(state.phase === PhasesEnum.PHASE_3_FLANK_ATTACKS)
     // TODO figure it out
-    state.phase = StateEnum.PHASE_4_PLAYER_ACTIONS
+    state.phase = PhasesEnum.PHASE_4_PLAYER_ACTIONS
     return state
 }
 
 export function nextState(state: GameState): GameState {
     console.log("STATE = " + state.phase)
     switch (state.phase) {
-        case StateEnum.PHASE_1_VICTORY_CHECK:
+        case PhasesEnum.PHASE_1_VICTORY_CHECK:
             state = check_victory(state)
             return nextState(state)
-        case StateEnum.PHASE_2_ADVANCE:
+        case PhasesEnum.PHASE_2_ADVANCE:
             let tmp = advance_units(state)
             return nextState(tmp)
-        case StateEnum.PHASE_3_FLANK_ATTACKS:
+        case PhasesEnum.PHASE_3_FLANK_ATTACKS:
             return flank_attacks(state)
-        case StateEnum.PHASE_5_DRAW_CARDS:
+        case PhasesEnum.PHASE_5_DRAW_CARDS:
             state = end_this_turn(state)
             return nextState(state)
         default:
@@ -129,7 +132,7 @@ export function initiate_attack(state: GameState, action: InitiateAttackEvent): 
         attack_column: action.selected_column,
         defence_column: action.selected_column,
     })
-    state.phase = StateEnum.PHASE_4_DEFENDER_ACTIONS
+    state.phase = PhasesEnum.PHASE_4_DEFENDER_ACTIONS
     return state
 }
 
@@ -187,7 +190,7 @@ export function choose_defender(game: GameState, action: ChooseDefenderEvent): G
         defenceSquad,
     )
     console.log("outcome =", outcome)
-    game.phase = StateEnum.PHASE_4_PLAYER_ACTIONS
+    game.phase = PhasesEnum.PHASE_4_PLAYER_ACTIONS
     if (defenceSquad.bonus_card !== undefined) {
         defending_player.discard_pile.push(defenceSquad.bonus_card)
     }
@@ -241,14 +244,14 @@ export function withdraw_from_battle(game: GameState, action: DefenderWithdrawsE
         defendingPlayer.discard_pile.push(supportCard)
         defendingPlayer.row_2[defenceColumn] = undefined
     }
-    game.phase = StateEnum.PHASE_4_PLAYER_ACTIONS
+    game.phase = PhasesEnum.PHASE_4_PLAYER_ACTIONS
     return game
 }
 
 
 export function draw_cards(state: GameState): GameState {
-    assert(state.phase === StateEnum.PHASE_4_PLAYER_ACTIONS)
-    state.phase = StateEnum.PHASE_5_DRAW_CARDS
+    assert(state.phase === PhasesEnum.PHASE_4_PLAYER_ACTIONS)
+    state.phase = PhasesEnum.PHASE_5_DRAW_CARDS
     for (let i = 0; i < 3; i++) {
         state.current_player = takeCard(state.current_player)
     }
@@ -259,6 +262,6 @@ export function end_this_turn(state: GameState): GameState {
     const tmp = state.current_player
     state.current_player = state.another_player
     state.another_player = tmp
-    state.phase = StateEnum.PHASE_1_VICTORY_CHECK
+    state.phase = PhasesEnum.PHASE_1_VICTORY_CHECK
     return state
 }

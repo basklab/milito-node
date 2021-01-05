@@ -1,5 +1,6 @@
 import {Card} from "@entities/Card";
 import * as util from "util";
+import HandDTO from "../milito-shared/game/HandDTO";
 
 export class IHand {
     cards: Array<Card>
@@ -40,4 +41,7 @@ export default class Hand extends IHand {
     //     return "(LP " + (this.cards.map(x => util.inspect(x)).join(" ")) + " RP)"
     // }
 
+    toDTO(): HandDTO {
+        return new HandDTO({cards: this.cards.map((c) => c.toDTO())})
+    }
 }

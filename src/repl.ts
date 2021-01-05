@@ -1,7 +1,9 @@
 import initialSetup from "@config/initialSetup";
 import * as util from "util";
 import {draw_cards, initiate_attack, nextState, place_a_unit, withdraw_from_battle} from "@config/gameActions";
-import {DefenderWithdrawsEvent, InitiateAttackEvent, PlaceUnitEvent} from "./events/GameEvents";
+import PlaceUnitEvent from "./milito-shared/events/PlaceUnitEvent";
+import InitiateAttackEvent from "./milito-shared/events/InitiateAttackEvent";
+import DefenderWithdrawsEvent from "./milito-shared/events/DefenderWithdrawsEvent";
 
 let state = initialSetup()
 
@@ -68,4 +70,6 @@ state = draw_cards(state)
 state = nextState(state)
 
 
-console.log(util.inspect(state, {depth: 7, colors: true, maxArrayLength: 9}))
+// console.log(util.inspect(state, {depth: 7, colors: true, maxArrayLength: 9}))
+
+console.log(util.inspect(state.toDTO(), {depth: 7, colors: true, maxArrayLength: 9}))
