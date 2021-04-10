@@ -1,5 +1,5 @@
-import {Card, ILeaderCard, IUnitCard, LeaderCard, UnitCard} from "@entities/Card";
-import Deck from "@entities/Deck";
+import {Card, ILeaderCard, IUnitCard, LeaderCard, UnitCard} from "@entities/Card"
+import Deck from "@entities/Deck"
 
 export default class AncientBritishDeck extends Deck {
 

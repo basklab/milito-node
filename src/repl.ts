@@ -4,6 +4,15 @@ import {draw_cards, initiate_attack, nextState, place_a_unit, withdraw_from_batt
 import PlaceUnitEvent from "./milito-shared/events/PlaceUnitEvent";
 import InitiateAttackEvent from "./milito-shared/events/InitiateAttackEvent";
 import DefenderWithdrawsEvent from "./milito-shared/events/DefenderWithdrawsEvent";
+import * as yaml from "js-yaml"
+import * as fs from "fs";
+
+const config = yaml.load(fs.readFileSync('milito-config/decks/AncientBritish.yaml', 'ascii'))
+const indentedJson = JSON.stringify(config, null, 4)
+console.log(indentedJson);
+
+throw new DOMException()
+
 
 let state = initialSetup()
 

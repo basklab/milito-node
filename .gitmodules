@@ -1,3 +1,6 @@
 [submodule "src/milito-shared"]
 	path = src/milito-shared
 	url = git@github.com:obask/milito-shared.git
+[submodule "milito-config"]
+	path = milito-config
+	url = git@github.com:basklab/milito-config.git
